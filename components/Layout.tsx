@@ -102,11 +102,6 @@ const Layout: React.FC<{ children?: JSX.Element }> = ({ children }) => {
           </Aside>
         </MediaQuery>
       }
-      footer={
-        <Footer height={60} p="md">
-          Application footer
-        </Footer>
-      }
       header={
         <Header
           height={70}

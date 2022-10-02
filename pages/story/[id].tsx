@@ -7,6 +7,11 @@ export interface Chapter {
   id: string;
   title: string;
   description: string;
+  story: {
+    author: {
+      username: string;
+    };
+  };
 }
 
 const Story = ({ chapters }: { chapters: Chapter[] }) => {
@@ -19,10 +24,11 @@ const Story = ({ chapters }: { chapters: Chapter[] }) => {
             {chapters.map((chapter) => {
               return (
                 <ChapterCard
+                  id={chapter.id}
                   key={chapter.id}
                   title={chapter.title}
+                  author={chapter.story.author.username}
                   description={chapter.description}
-                  author="Oh crap i need to fix this later"
                 />
               );
             })}

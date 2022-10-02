@@ -49,3 +49,34 @@ export const post = async <T>(
     return [error, null];
   }
 };
+
+export const put = async <T>(
+  url: string,
+  values: any
+): Promise<QueryResponse<T>> => {
+  try {
+    const request = () => axios.put(url, values, { withCredentials: true });
+    const { data } = await handleRequest(request);
+    return [null, data];
+  } catch (error: any) {
+    return [error, null];
+  }
+};
+
+export const deleteResource = async <T>(
+  url: string
+): Promise<QueryResponse<T>> => {
+  try {
+    const request = () =>
+      axios.delete(url, {
+        withCredentials: true,
+        baseURL: "http://localhost:8000/api",
+      });
+
+    console.log(`Essa é a URL: ${url}`);
+    const { data } = await handleRequest(request);
+    return [null, data];
+  } catch (error: any) {
+    return [error, null];
+  }
+};

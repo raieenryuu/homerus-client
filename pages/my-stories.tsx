@@ -1,4 +1,4 @@
-import { Group, Button, TextInput } from "@mantine/core";
+import { Group, Button, TextInput, Stack, Divider } from "@mantine/core";
 import StoryCard from "../components/StoryCard";
 import { useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
@@ -75,6 +75,8 @@ const MyStories = (props: {
         </Group>
       </Group>
 
+      <Divider />
+
       <Modal
         opened={isOpened}
         onClose={() => setIsOpened(false)}
@@ -94,7 +96,7 @@ const MyStories = (props: {
           </Group>
         </form>
       </Modal>
-      <Group position="center">
+      <Stack mt="lg" align="stretch" justify="center">
         {stories.map((story) => {
           return (
             <StoryCard
@@ -106,7 +108,7 @@ const MyStories = (props: {
             />
           );
         })}
-      </Group>
+      </Stack>
     </div>
   );
 };
