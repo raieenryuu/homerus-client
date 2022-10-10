@@ -1,39 +1,25 @@
-import { Container, Group } from "@mantine/core";
+import { Center, Container, Group, Text } from "@mantine/core";
 import { GetServerSidePropsContext } from "next";
 import ChapterCard from "../../components/ChapterCards";
 import { fetcherSSR } from "../../helpers/request-helper-ssr";
-
-export interface Chapter {
-  id: string;
-  title: string;
-  description: string;
-  story: {
-    author: {
-      username: string;
-    };
-  };
-}
-
-const Story = ({ chapters }: { chapters: Chapter[] }) => {
+import { Title } from "@mantine/core";
+import { Chapter } from "../../types/interfaces";
+import { Story } from "../../types/interfaces";
+import ChaptersManager from "../../components/ChaptersManager";
+const Story = ({ chapters, story }: { chapters: Chapter[]; story: Story }) => {
   return (
     <div>
-      <Container>
-        <h1>Chapters</h1>
-        <div>
-          <Group>
-            {chapters.map((chapter) => {
-              return (
-                <ChapterCard
-                  id={chapter.id}
-                  key={chapter.id}
-                  title={chapter.title}
-                  author={chapter.story.author.username}
-                  description={chapter.description}
-                />
-              );
-            })}
-          </Group>
-        </div>
+      <Container mt="xs">
+        <Center>
+          <Title color="dark">{story.title}</Title>
+        </Center>
+
+        <Center>
+          <Text>{story.description}</Text>
+        </Center>
+        <Container mt="xl">
+          <ChaptersManager chapters={chapters} />
+        </Container>
       </Container>
     </div>
   );
@@ -54,9 +40,20 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { redirect: { statusCode: 307, destination: "/" } };
   }
 
+  const [err, story] = await fetcherSSR<Story>(
+    context.req,
+    context.res,
+    `http://localhost:8000/api/story/${storyId}`
+  );
+
+  if (error && !story) {
+    return { redirect: { statusCode: 307, destination: "/" } };
+  }
+
   return {
     props: {
       chapters: chapters,
+      story: story,
     },
   };
 }

@@ -1,4 +1,4 @@
-import { Container, Group, Slider } from "@mantine/core";
+import { Center, Container, Group, Slider } from "@mantine/core";
 import { GetServerSidePropsContext } from "next";
 import { fetcherSSR } from "../../helpers/request-helper-ssr";
 import { TypographyStylesProvider } from "@mantine/core";
@@ -13,10 +13,17 @@ export interface Chapter {
 const Chapter = ({ chapter }: { chapter: Chapter }) => {
   return (
     <div>
-      <h1>Chapter page</h1>
-      <TypographyStylesProvider>
-        <div dangerouslySetInnerHTML={{ __html: `${chapter.content}` }} />
-      </TypographyStylesProvider>
+      <Container>
+        <Center>
+          <h1>Chapter page</h1>
+        </Center>
+
+        <Center>
+          <TypographyStylesProvider>
+            <div dangerouslySetInnerHTML={{ __html: `${chapter.content}` }} />
+          </TypographyStylesProvider>
+        </Center>
+      </Container>
     </div>
   );
 };

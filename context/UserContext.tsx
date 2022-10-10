@@ -1,12 +1,6 @@
 import React, { createContext, FC, useContext, useState } from "react";
 
-interface User {
-  username: string;
-  id: string;
-  email?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
+import { User } from "../types/interfaces";
 
 export interface UserContext {
   user?: User;

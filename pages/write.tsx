@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { RichTextEditor } from "@mantine/rte";
+import RichTextEditor from "../components/RichText";
 import { post } from "../helpers/requests-helper";
 import {
   Box,
@@ -87,7 +87,7 @@ const Write = () => {
   });
 
   return (
-    <div>
+    <Container mt="xl">
       <form onSubmit={form.onSubmit(() => onSubmit(form.values))}>
         <Group grow>
           <Stack>
@@ -130,7 +130,7 @@ const Write = () => {
           controls={[["italic", "underline", "bold", "h1", "h2", "h3"]]}
         />
       </form>
-    </div>
+    </Container>
   );
 };
 

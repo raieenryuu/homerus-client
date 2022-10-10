@@ -23,7 +23,9 @@ export default function App(props: AppProps) {
           withNormalizeCSS
           theme={{
             /** Put your mantine theme override here */
-            colorScheme: "dark",
+            colorScheme: "light",
+            headings: { fontFamily: "fantasy" },
+            fontFamily: "serif",
           }}
         >
           <Layout>

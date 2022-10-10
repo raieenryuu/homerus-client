@@ -1,6 +1,10 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosResponse, AxiosError } from "axios";
 
-export type QueryResponse<T> = [error: string | null, data: T | null];
+export type QueryResponse<T> = [
+  error: AxiosError<{ message: string }> | null,
+  data: T | null
+];
+const BASE_URL = "http://localhost:8000/api";
 
 export const refreshTokens = async () => {
   const response = await axios.post(
@@ -29,7 +33,8 @@ const handleRequest = async (
 
 export const fetcher = async <T>(url: string): Promise<QueryResponse<T>> => {
   try {
-    const request = () => axios.get(url, { withCredentials: true });
+    const request = () =>
+      axios.get(url, { withCredentials: true, baseURL: BASE_URL });
     const { data } = await handleRequest(request);
     return [null, data];
   } catch (error: any) {
@@ -42,7 +47,8 @@ export const post = async <T>(
   values: any
 ): Promise<QueryResponse<T>> => {
   try {
-    const request = () => axios.post(url, values, { withCredentials: true });
+    const request = () =>
+      axios.post(url, values, { withCredentials: true, baseURL: BASE_URL });
     const { data } = await handleRequest(request);
     return [null, data];
   } catch (error: any) {
@@ -55,7 +61,8 @@ export const put = async <T>(
   values: any
 ): Promise<QueryResponse<T>> => {
   try {
-    const request = () => axios.put(url, values, { withCredentials: true });
+    const request = () =>
+      axios.put(url, values, { withCredentials: true, baseURL: BASE_URL });
     const { data } = await handleRequest(request);
     return [null, data];
   } catch (error: any) {
@@ -70,7 +77,7 @@ export const deleteResource = async <T>(
     const request = () =>
       axios.delete(url, {
         withCredentials: true,
-        baseURL: "http://localhost:8000/api",
+        baseURL: BASE_URL,
       });
 
     console.log(`Essa é a URL: ${url}`);
