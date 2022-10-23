@@ -40,7 +40,7 @@ const ChaptersManager = ({ chapters }: ChaptersManagerProps) => {
     <tr key={chapter.id}>
       <td>{chapter.title}</td>
       <td>{chapter.description}</td>
-      <td>10.000</td>
+      <td>{chapter.wordCount}</td>
       <td>
         <Button
           variant="subtle"

@@ -11,6 +11,7 @@ export interface Chapter {
   title: string;
   description: string;
   content: string;
+  wordCount: number;
   story: {
     author: {
       username: string;

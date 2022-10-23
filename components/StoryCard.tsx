@@ -1,30 +1,34 @@
-import {
-  Card,
-  Title,
-  Text,
-  Box,
-  Group,
-  Button,
-  Divider,
-  Modal,
-  TextInput,
-} from "@mantine/core";
+import { Card, Title, Text, Group, Button, Menu, Badge } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import Link from "next/link";
 import { useState } from "react";
-import { IoIosArrowDropdown } from "react-icons/io";
 import { deleteResource, post, put } from "../helpers/requests-helper";
+import LikeButton from "./buttons/LikeButton";
+import DownloadButton from "./buttons/DownloadButton";
+import {
+  IconDots,
+  IconDownload,
+  IconBookmark,
+  IconMessageCircle,
+  IconShare,
+  IconSearch,
+  IconPhoto,
+  IconArrowsLeftRight,
+  IconTrash,
+} from "@tabler/icons";
 
 const StoryCard = ({
   title,
   description,
   author,
   id,
+  isProfile,
 }: {
   title: string;
   description: string;
   author: string;
   id: string;
+  isProfile: boolean;
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -63,103 +67,64 @@ const StoryCard = ({
   }
 
   return (
-    <div>
-      <Box
-        sx={(theme) => ({
-          backgroundColor:
-            theme.colorScheme === "dark"
-              ? theme.colors.dark[6]
-              : theme.colors.gray[0],
-          borderRadius: theme.radius.md,
-        })}
-      >
-        <Card shadow="sm" p="xl" radius="md" withBorder>
-          <Card.Section p="lg">
-            <Group position="apart">
-              <div>
-                <Link href={`story/${id}`}>
-                  <a style={{ textDecoration: "none" }}>
-                    <Title size="lg" color={"indigo"}>
-                      {title}
-                    </Title>
-                  </a>
-                </Link>
+    <Card shadow="sm" p="xl" radius="md" withBorder>
+      <Card.Section p="lg">
+        <Group position="apart">
+          <div>
+            <Link href={`story/${id}`}>
+              <a style={{ textDecoration: "none" }}>
+                <Title size="lg" color={"indigo"}>
+                  {title}
+                </Title>
+              </a>
+            </Link>
 
-                <Text size="sm" color="dimmed">
-                  By: {author}
-                </Text>
-              </div>
-              <Button radius="xl" variant="subtle" size="xs">
-                <IoIosArrowDropdown size={30} onClick={() => setIsOpen(true)} />
-              </Button>
+            <Text size="sm" color="dimmed">
+              By: {author}
+            </Text>
+          </div>
 
-              <Modal
-                opened={isOpen}
-                onClose={() => setIsOpen(false)}
-                title="Story Settings"
-              >
-                <Group noWrap>
-                  <Button color="red" onClick={() => setIsWarning(true)}>
-                    Delete story
-                  </Button>
-                  <Text size="xs" color="dimmed">
-                    This will permanently delete the story and all its chapters
-                  </Text>
-                </Group>
+          <div>
+            <Menu shadow="md" width={200}>
+              <Menu.Target>
+                <Button variant="white">
+                  <IconDots color="black" />
+                </Button>
+              </Menu.Target>
 
-                {isWarning && (
-                  <div>
-                    <Text color="red" size="xs">
-                      Are you sure you want to delete?
-                    </Text>
-                    <form onSubmit={() => handleDelete(id)}>
-                      <TextInput
-                        style={{
-                          outlineColor: "red",
-                        }}
-                        placeholder="type 'delete' and press enter to confirm"
-                        size="xs"
-                      />
-                      <Button type="submit" variant="subtle" hidden></Button>
-                    </form>
-                  </div>
-                )}
+              <Menu.Dropdown>
+                <Menu.Label>Application</Menu.Label>
+                <Menu.Item icon={<IconBookmark size={20} />}>
+                  Bookmark
+                </Menu.Item>
+                <Menu.Item icon={<IconDownload size={20} />}>
+                  Download
+                </Menu.Item>
+                <Menu.Item icon={<IconShare />}>Share</Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          </div>
+        </Group>
+      </Card.Section>
 
-                <Divider my="sm" variant="dashed" />
+      <Text size="sm" mb="xl">
+        {description}
+      </Text>
+      <Group position="apart">
+        <Group>
+          <Badge size="sm">Adventure</Badge>
+          <Badge size="sm">Adventure</Badge>
+          <Badge size="sm">Adventure</Badge>
+          <Badge size="sm">Adventure</Badge>
+        </Group>
 
-                <Group noWrap>
-                  <Button onClick={() => handlePublish(id)} color="cyan">
-                    Publish story
-                  </Button>
-                  <Text size="xs" color="dimmed">
-                    This will make the story and all its chapters public
-                  </Text>
-                </Group>
-
-                <Divider my="sm" variant="solid" />
-                <Text>Update Story</Text>
-                <form onSubmit={form.onSubmit(() => onSubmit())}>
-                  <TextInput
-                    {...form.getInputProps("title")}
-                    label="New Title"
-                  />
-
-                  <TextInput
-                    {...form.getInputProps("description")}
-                    label="New Description"
-                  />
-                  <Button type="submit" mt="md">
-                    Send Update
-                  </Button>
-                </form>
-              </Modal>
-            </Group>
-          </Card.Section>
-
-          <Text size="md">{description}</Text>
-        </Card>
-      </Box>
-    </div>
+        <Group>
+          <Text size="xs">Word Count: 100.000</Text>
+          <Text size="xs">Chapters: 20</Text>
+          <LikeButton />
+        </Group>
+      </Group>
+    </Card>
   );
 };
 

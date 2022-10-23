@@ -17,15 +17,11 @@ import { useUser } from "../context/UserContext";
 import { Story } from "./my-stories";
 import { useRef } from "react";
 
-const initialValue = "<p>Write your story here</p>";
+let regex = /(<([^>]+)>)/gi;
 const Write = () => {
-  const [value, onChange] = useState(initialValue);
+  const [wordCount, setWordCount] = useState(0);
 
   const [stories, setStories] = useState<Story[]>([]);
-
-  const [selectValue, setSelectValue] = useState<string>();
-
-  const ref = useRef<HTMLSelectElement>(null);
 
   const { user } = useUser();
 
@@ -37,9 +33,18 @@ const Write = () => {
       storyId: "",
     },
     validate: {
-      title: (value) => (value.length != 0 ? null : "This should not be empty"),
+      title: (value) =>
+        value.length != 0
+          ? value.length >= 4 && value.length <= 64
+            ? null
+            : "The title should contain between 4 and 64 characters"
+          : "This should not be empty",
       description: (value) =>
-        value.length != 0 ? null : "This should not be empty",
+        value.length != 0
+          ? value.length >= 64 && value.length <= 256
+            ? null
+            : "The title should contain between 64 and 256 characters"
+          : "This should not be empty",
       content: (value) =>
         value.length != 0 ? null : "You cannot create an empty chapter",
 
@@ -53,6 +58,7 @@ const Write = () => {
     content: string;
     description: string;
     title: string;
+    wordCount: number;
   }) {
     const selectedStory = stories.find(
       (story) => story.title === form.values.storyId
@@ -88,7 +94,9 @@ const Write = () => {
 
   return (
     <Container mt="xl">
-      <form onSubmit={form.onSubmit(() => onSubmit(form.values))}>
+      <form
+        onSubmit={form.onSubmit(() => onSubmit({ ...form.values, wordCount }))}
+      >
         <Group grow>
           <Stack>
             <TextInput
@@ -117,12 +125,36 @@ const Write = () => {
           </Stack>
         </Group>
 
+        <Group>
+          <Text size="md" mt="md">
+            Word Count: {wordCount}
+          </Text>
+
+          <Text size="sm" mt="md" color="dimmed ">
+            Your chapter must have at least 512 words in order for it to be
+            published - you can still save it to work on it latter though
+          </Text>
+        </Group>
+
         <RichTextEditor
           {...form.getInputProps("content")}
           mt="md"
           value={form.values.content}
           onChange={(value) => {
             form.setFieldValue("content", value);
+
+            let otherline = value.split("</p><p>").length;
+
+            console.log(
+              value
+                .replace(regex, "")
+                .trim()
+                .split(" ")
+                .filter((item) => item != "")
+            );
+            setWordCount(
+              value.replace(regex, "").trim().split(" ").length - 1 + otherline
+            );
           }}
           style={{
             minHeight: "780px",

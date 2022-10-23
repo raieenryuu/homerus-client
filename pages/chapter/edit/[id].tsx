@@ -1,12 +1,23 @@
 import RichTextEditor from "../../../components/RichText";
 import { post, put } from "../../../helpers/requests-helper";
-import { TextInput, Stack, Group, Button, Container } from "@mantine/core";
+import {
+  TextInput,
+  Stack,
+  Group,
+  Button,
+  Container,
+  Text,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { Chapter, Story } from "../../../types/interfaces";
 import { GetServerSidePropsContext } from "next";
 import { fetcherSSR } from "../../../helpers/request-helper-ssr";
+import { useState } from "react";
+
+let regex = /(<([^>]+)>)/gi;
 
 const EditChapter = ({ chapter }: { chapter: Chapter }) => {
+  const [wordCount, setWordCount] = useState(chapter.wordCount);
   const form = useForm({
     initialValues: {
       title: chapter.title,
@@ -23,15 +34,12 @@ const EditChapter = ({ chapter }: { chapter: Chapter }) => {
   });
 
   async function onSubmit() {
-    console.log("teste");
-    // const [err, response] = await put<Chapter>(
-    //   `/chapter/${chapter.id}`,
-    //   form.values
-    // );
-
     // console.log(response);
 
-    const [error, response] = await put(`/chapter/${chapter.id}`, form.values);
+    const [error, response] = await put(`/chapter/${chapter.id}`, {
+      ...form.values,
+      wordCount,
+    });
 
     console.log(response);
 
@@ -63,12 +71,28 @@ const EditChapter = ({ chapter }: { chapter: Chapter }) => {
           Update
         </Button>
 
+        <Group>
+          <Text size="md" mt="md">
+            Word Count: {wordCount}
+          </Text>
+
+          <Text size="sm" mt="md" color="dimmed ">
+            Your chapter must have at least 512 words in order for it to be
+            published - you can still save it to work on it latter though
+          </Text>
+        </Group>
+
         <RichTextEditor
           {...form.getInputProps("content")}
           mt="md"
           value={form.values.content}
           onChange={(value) => {
             form.setFieldValue("content", value);
+
+            let otherline = value.split("</p><p>").length;
+            setWordCount(
+              value.replace(regex, "").trim().split(" ").length - 1 + otherline
+            );
           }}
           style={{
             minHeight: "780px",
