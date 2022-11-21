@@ -1,4 +1,14 @@
-import { Card, Title, Text, Group, Button, Menu, Badge } from "@mantine/core";
+import {
+  Card,
+  Title,
+  Text,
+  Group,
+  Button,
+  Menu,
+  Badge,
+  ScrollArea,
+  Container,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import Link from "next/link";
 import { useState } from "react";
@@ -23,12 +33,14 @@ const StoryCard = ({
   author,
   id,
   isProfile,
+  tags,
 }: {
   title: string;
   description: string;
   author: string;
   id: string;
   isProfile: boolean;
+  tags: string;
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -85,22 +97,23 @@ const StoryCard = ({
           </div>
 
           <div>
-            <Menu shadow="md" width={200}>
+            <Menu shadow="md" width={400}>
               <Menu.Target>
                 <Button variant="white">
                   <IconDots color="black" />
                 </Button>
               </Menu.Target>
-
               <Menu.Dropdown>
-                <Menu.Label>Application</Menu.Label>
-                <Menu.Item icon={<IconBookmark size={20} />}>
-                  Bookmark
-                </Menu.Item>
-                <Menu.Item icon={<IconDownload size={20} />}>
-                  Download
-                </Menu.Item>
-                <Menu.Item icon={<IconShare />}>Share</Menu.Item>
+                <Container>
+                  <Menu.Label>Application</Menu.Label>
+                  <Menu.Item icon={<IconBookmark size={20} />}>
+                    Bookmark
+                  </Menu.Item>
+                  <Menu.Item icon={<IconDownload size={20} />}>
+                    Download
+                  </Menu.Item>
+                  <Menu.Item icon={<IconShare size={20} />}>Share</Menu.Item>
+                </Container>
               </Menu.Dropdown>
             </Menu>
           </div>
@@ -112,10 +125,9 @@ const StoryCard = ({
       </Text>
       <Group position="apart">
         <Group>
-          <Badge size="sm">Adventure</Badge>
-          <Badge size="sm">Adventure</Badge>
-          <Badge size="sm">Adventure</Badge>
-          <Badge size="sm">Adventure</Badge>
+          {tags.split(",").map((tag) => (
+            <Badge size="sm">{tag}</Badge>
+          ))}
         </Group>
 
         <Group>
